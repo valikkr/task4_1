@@ -33,7 +33,7 @@ echo "iKernel version: $d">>task4_1.out
 
 #Kernel version: xxxx (например 4.4.0-116-generic)
 
-f=``
+f=`ls -ld /var/log/installer |awk '{print $6,$7,$8}'`
 echo "Installation date: $f">>task4_1.out
 #Installation date: xxxx
 
@@ -52,8 +52,9 @@ echo "Processes running: $k">>task4_1.out
 l=`who | wc -l`
 echo "User logged in: $l">>task4_1.out
 #User logged in: 665
-echo "--- Network ---">>task4_1.out
-#<Iface #1 name>:  IP/mask
+echo "---Network ---">>task4_1.out
+ifaceinfo=$(ip -o -f inet addr | awk '{print $1" iface "$2 " : " $4}')
+echo $ifaceinfo >>task4_1.out
 #echo "">>task4_1.out
 
 #<Iface #2  name>:  IP/mask
