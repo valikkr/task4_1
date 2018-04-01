@@ -1,61 +1,66 @@
 #!/bin/bash
 
-# Check if the script is being run by root
+touch task4_1.out; chmod u+w task4_1.out
+echo "--- Hardware ---">>task4_1.out
 
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root"
-   exit 1
-fi
+a=`cat /proc/cpuinfo | grep model\ name | uniq` 
+echo "CPU:" $a>>task4_1.out
 
+#ram
+b=`grep MemTotal /proc/meminfo | awk '{print $2}'`
+	echo "RAM" $b>>task4_1.out
+#motherboad
+	#c=`` 
+	#echo "Motherboard:" $c>>task4_1.out 
 
-# Check if dmidecode is being installed
+#System Serial Number:
+#d=``
 
-if [ $(dpkg-query -W -f='${Status}' dmidecode 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  apt-get install -y dmidecode > /dev/null;
-fi
+#	echo "">> $d>>task4_1.out 
+#System Serial Number: XXXXXX
 
+echo "--- System ---">>task4_1.out
 
+#
 
-updatedb
-scriptdir=$(locate /home/kid0/Mirantis/task4_1.sh | sed 's/task4_1.sh//g')
-#scriptdir=$(locate /kid0kh/task4_1/task4_1.sh | sed 's/task4_1.sh//g')
-exec 1>$scriptdir/task4_1.out
-
-hwinfo="--Hardware--"
-cpuinfo=$(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F ': ' '{print$2}')
-meminfo=$(cat /proc/meminfo | grep 'MemTotal' | awk -F ': ' '{print$2}')
-boardinfo=$(dmidecode -s baseboard-product-name && dmidecode -s baseboard-manufacturer)
-uuidinfo=$(dmidecode -s system-serial-number)
-sysinfo="--System--"
-releaseinfo=$(lsb_release -d | awk '{print $2 ,$3}')
-kernelinfo=$(uname -r)
-installinfo=$(fs=$(df / | tail -1 | cut -f1 -d' ') && tune2fs -l $fs | grep created | awk -F ":" '{print$2,$3,$4}')
-hostinfo=$(hostname)
-uptimeinfo=$(uptime -p)
-processinfo=$(ps aux | wc -l)
-userinfo=$(users | wc -w)
-networkinfo="--Network--"
-ifaceinfo=$(ip -o -f inet addr | awk '{print $1" iface "$2 " : "  $4}')
+e=`lsb_release -a | grep Des`
+echo "OS Distribution:" $e >>task4_1.out 
+#xxxxx (например Ubuntu 16.04.4 LTS)
 
 
+d=`uname -r`
+echo "iKernel version: $d">>task4_1.out 
+
+#Kernel version: xxxx (например 4.4.0-116-generic)
+
+f=``
+echo "Installation date: $f">>task4_1.out
+#Installation date: xxxx
+
+g=`hostname`
+echo "Hostname: $g">>task4_1.out
+#Hostname: yyyyy
+
+h=`uptime | sed 's/,.*//' | sed 's/.*up //'`
+echo "Uptime: $h">>task4_1.out
+
+#Uptime: XX days
+
+k=`ps aux | wc -l`
+echo "Processes running: $k">>task4_1.out
+#Processes running: 56684
+l=`who | wc -l`
+echo "User logged in: $l">>task4_1.out
+#User logged in: 665
+echo "--- Network ---">>task4_1.out
+#<Iface #1 name>:  IP/mask
+#echo "">>task4_1.out
+
+#<Iface #2  name>:  IP/mask
 
 
 
 
 
-echo $hwinfo
-echo 'CPU:' $cpuinfo
-echo 'RAM:' $meminfo
-echo 'Motherboard:' $boardinfo
-echo 'System Serial Number:' $uuidinfo
-echo $sysinfo
-echo 'OS Distribution:' $releaseinfo
-echo 'Kernel version:' $kernelinfo
-echo 'Installation date:' $installinfo
-echo 'Hostname:' $hostinfo
-echo 'Uptime:' $uptimeinfo
-echo 'Processes running:' $processinfo
-echo 'User logged in:' $userinfo
-echo $networkinfo
-echo $ifaceinfo
+
+
